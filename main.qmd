@@ -3,4 +3,4 @@ title: "main"
 format: html
 ---
 
-hi guys
+bye

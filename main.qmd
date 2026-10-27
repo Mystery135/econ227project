@@ -1,5 +1,6 @@
 ---
-title: "main"
+title: "ECON 227 Poster Project"
+names: Narane Ramprasad, Terry Tran, Jeremy Lai
 format: html
 ---
 

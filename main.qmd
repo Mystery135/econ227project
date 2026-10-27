@@ -5,8 +5,11 @@ format: html
 ---
 
 ```{r}
+install.packages("tidyverse")
 library(tidyverse)
 owid_co2_data <- read_csv("owid-co2-data.csv")
+data <- owid_co2_data |> select(country, year, population, gdp, cement_co2_per_capita, co2_including_luc, co2_including_luc_growth_abs, co2_including_luc_growth_prct, co2_including_luc_per_capita, co2_including_luc_per_gdp, coal_co2_per_capita, consumption_co2_per_capita, gas_co2_per_capita, ghg_per_capita, land_use_change_co2_per_capita, methane_per_capita, nitrous_oxide_per_capita, oil_co2_per_capita, other_co2_per_capita, share_global_cumulative_co2_including_luc, share_global_cumulative_coal_co2,total_ghg)
+data
 ```
 
 ---

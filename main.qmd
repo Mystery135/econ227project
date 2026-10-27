@@ -7,6 +7,7 @@ format: html
 ```{r}
 library(readr)
 owid_co2_data <- read_csv("owid-co2-data.csv")
+bbbdfdsgsdf
 ```
 
 ---

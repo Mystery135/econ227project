@@ -58,7 +58,7 @@ Ok. Now its time to make graphs. First, we decided to make a graph that compares
 
 ```{r}
 options(scipen = 999)
-owid_scatterplot_1 <- owid |>
+gdp_per_capita_vs_co2_capita_by_country <- owid |>
                       filter(year == 2015) |>
                             ggplot(aes(x = gdp_per_capita, y = co2_per_capita)) +
                             geom_point() + 
@@ -69,11 +69,11 @@ owid_scatterplot_1 <- owid |>
                               y = "Per Capita carbon Dioxide Emissions (Metric Tons)",
                               title = "GDP per capita vs CO2 per capita for countries, 2018")
                           
-owid_scatterplot_1
+gdp_per_capita_vs_co2_capita_by_country
 ```
 
 ```{r}
-owid_scatterplot_1 <- owid |>
+gdp_capita_vs_emissions_by_income_groups <- owid |>
   filter(country == "High-income countries" | country == "Low-income countries" | country == "Lower-middle-income countries" | country == "Upper-middle-income countries") |>
   ggplot(aes(x = year, y = co2_per_capita, colour = country)) +
   geom_line() + 
@@ -81,9 +81,11 @@ owid_scatterplot_1 <- owid |>
        y = "Per Capita carbon Dioxide Emissions (Metric Tons)",
        title = "GDP per capita vs CO2 Emissions per capita, by country income groups",
         colour = " Country Income Category")
-owid_scatterplot_1
+gdp_capita_vs_emissions_by_income_groups
 ```
 
 ```{r}
+
+
 
 ```

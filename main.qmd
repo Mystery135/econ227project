@@ -41,8 +41,49 @@ owid <- owid|>
   mutate(gdp_per_capita = gdp / population) |> filter(year >= "1900")
 
 owid <- owid |>
-        filter(country != "Africa", country != "Africa (GCP)", country != "Antarctica", country != "Asia", country != "Asia (GCP)", country !="Asia (excl. China and India)", country != "Bonaire Sint Eustatius and Saba", country != "British Virgin Islands", country != "Christmas Island", country != "Cook Islands", country != "Curacao", country != "Europe", country != "Europe (GCP)", country != "Europe (excl. EU-27)", country != "Europe (excl. EU-28)", country != "European Union (28)", country != "Faroe Islands", country != "French Polynesia", country != "Greenland", country != "International aviation", country != "International shipping", country != "Kuwaiti Oil Fires", country != "Kuwaiti Oil Fires (GCP)", country != "Middle East (GCP)", country != "Montserrat", country != "New Caledonia", country != "Niue", country != "Non-OECD (GCP)", country != "North America (GCP)", country != "North America (excl. USA)", country != "OECD (GCP)", country != "OECD (Jones et al.)", country != "Oceania (GCP)", country != "Ryukyu Islands", country != "Ryukyu Islands (GCP)", country != "Saint Helena", country != "Saint Pierre and Miquelon", country != "Sint Maarten (Dutch part)", country != "South America (GCP)", country != "Wallis and Futuna", country != "World")
-
+        filter(country != "Africa", country != "Africa (GCP)", country != "Antarctica", country != "Asia", country != "Asia (GCP)", country !="Asia (excl. China and India)", country != "Bonaire Sint Eustatius and Saba", country != "British Virgin Islands", country != "Christmas Island", country != "Cook Islands", country != "Curacao", country != "Europe", country != "Europe (GCP)", country != "Europe (excl. EU-27)", country != "Europe (excl. EU-28)", country != "European Union (28)", country != "Faroe Islands", country != "French Polynesia", country != "Greenland", country != "International aviation", country != "International shipping", country != "Kuwaiti Oil Fires", country != "Kuwaiti Oil Fires (GCP)", country != "Middle East (GCP)", country != "Montserrat", country != "New Caledonia", country != "Niue", country != "Non-OECD (GCP)", country != "North America (GCP)", country != "North America (excl. USA)", country != "OECD (GCP)", country != "OECD (Jones et al.)", country != "Oceania (GCP)", country != "Ryukyu Islands", country != "Ryukyu Islands (GCP)", country != "Saint Helena", country != "Saint Pierre and Miquelon", country != "Sint Maarten (Dutch part)", country != "South America (GCP)", country != "Wallis and Futuna", country != "World", country != "Central America (GCP)")
+view(owid)
 ```
 
 Our data is now more organised, but we can still take further steps to reduce the amount of data that we need to manage. For example, we've already calculated GDP per capita, which means we don't need population or gdp anymore. So we can remove that from the data.
+
+```{r}
+owid <- owid |>
+        select(country, iso_code, year, co2_per_capita, consumption_co2_per_capita, ghg_per_capita, gdp_per_capita)
+view(owid)
+
+```
+
+Ok. Now its time to make graphs. First, we decided to make a graph that compares GDP per Capita and and Co2 per capita for a given year. The simplest way to compare 2 quantitative variables is usually a scatterplot. We chose the year 2015 because more recent years had missing data for some countries, and earlier years are both less useful and also tend to have more missing data. We used geom_smooth("lm") create a line of best fit that was calculated via linear regression. We also log - scaled the graph to make it look better and easier to analyse.
+
+```{r}
+options(scipen = 999)
+owid_scatterplot_1 <- owid |>
+                      filter(year == 2015) |>
+                            ggplot(aes(x = gdp_per_capita, y = co2_per_capita)) +
+                            geom_point() + 
+                            geom_smooth(method = "lm") +
+                            scale_x_log10() +
+                            scale_y_log10() + 
+                            labs(x = "GDP per capita (2011 chained USD)", 
+                              y = "Per Capita carbon Dioxide Emissions (Metric Tons)",
+                              title = "GDP per capita vs CO2 per capita for countries, 2018")
+                          
+owid_scatterplot_1
+```
+
+```{r}
+owid_scatterplot_1 <- owid |>
+  filter(country == "High-income countries" | country == "Low-income countries" | country == "Lower-middle-income countries" | country == "Upper-middle-income countries") |>
+  ggplot(aes(x = year, y = co2_per_capita, colour = country)) +
+  geom_line() + 
+  labs(x = "GDP per capita (2011 chained USD)", 
+       y = "Per Capita carbon Dioxide Emissions (Metric Tons)",
+       title = "GDP per capita vs CO2 Emissions per capita, by country income groups",
+        colour = " Country Income Category")
+owid_scatterplot_1
+```
+
+```{r}
+
+```

@@ -1,23 +1,48 @@
----
-title: "ECON 227 Poster Project"
-names: Narane Ramprasad, Terry Tran, Jeremy Lai
-format: html
----
+# 
+
+"ECON 227 Poster Project" Names: Narane Ramprasad, Terry Tran, Jeremy Lai
+
+Research Question: Using Our World In Data emissions data, we want to investigate what type of relationship, if any, exists between income (measured in GDP per capita) and various measures of per capita greenhouse gas emissions for different countries. We want to explore trends both within a country (over time), and between countries with varying income levels. 
+
+In Order to answer this research question, we needed data on various measures of per capita emissions for different countries, and we needed GDP per capita. First, we decided to explore the Our World In Data table:
 
 ```{r}
-install.packages("tidyverse")
 library(tidyverse)
-owid_co2_data <- read_csv("owid-co2-data.csv")
-data <- owid_co2_data |> select(country, year, population, gdp, cement_co2_per_capita, co2_including_luc, co2_including_luc_growth_abs, co2_including_luc_growth_prct, co2_including_luc_per_capita, co2_including_luc_per_gdp, coal_co2_per_capita, consumption_co2_per_capita, gas_co2_per_capita, ghg_per_capita, land_use_change_co2_per_capita, methane_per_capita, nitrous_oxide_per_capita, oil_co2_per_capita, other_co2_per_capita, share_global_cumulative_co2_including_luc, share_global_cumulative_coal_co2,total_ghg)
-
-owid_co2_data <- owid_co2_data |> mutate(gdp_per_capita = gdp/population)
-
+owid <- read_csv("owid-co2-data.csv")
+owid
 ```
+
+As we saw, our world in data had far too many columns. If we used all of these columns, our data analysis would take far too long, and it would be fairly ineffective. So, we decided to cut down on the number of columns.
+
+We ultimate choose 8 columns from the data set. 3 of these were direct measures of per capita emissions:
+
+1\) Per Capita CO2 emissions
+
+2\) Per Capita Consumption CO2 emissions (this measure calculates emissions based on where the final product of the emissions is used)
+
+3\) Per Capita Greenhouse Gas Emissions.
+
+The other 5 columns are necessary for data analysis (year, iso code, country, population, and GDP). We needed both GDP and population in order to calculate GDP per capita, the other important measure that we needed to answer our research question. Additionally, we chose to only use data from after 1900, because there are a lot of NAs before 1900, as data collection for emissions was quite rare.
+
+Many of the column categories under countries were non-country entities that we didn't want/need to analyse. For example, there was specific data about continents, which isn't directly pertinent to our research question. There was also data from island territories, sub-country categories, and industries that we removed.
+
 ```{r}
-fig1 <- owid_co2_data |> ggplot(aes(x = ghg_per_capita, y = gdp_per_capita)) + geom_point()
-fig1
+library(tidyverse)
+
+owid <- read_csv("owid-co2-data.csv")
+owid <- owid |>
+  select(
+    country, iso_code, year, population, gdp,
+    co2_per_capita,
+    consumption_co2_per_capita,
+    ghg_per_capita
+  )
+owid <- owid|>
+  mutate(gdp_per_capita = gdp / population) |> filter(year >= "1900")
+
+owid <- owid |>
+        filter(country != "Africa", country != "Africa (GCP)", country != "Antarctica", country != "Asia", country != "Asia (GCP)", country !="Asia (excl. China and India)", country != "Bonaire Sint Eustatius and Saba", country != "British Virgin Islands", country != "Christmas Island", country != "Cook Islands", country != "Curacao", country != "Europe", country != "Europe (GCP)", country != "Europe (excl. EU-27)", country != "Europe (excl. EU-28)", country != "European Union (28)", country != "Faroe Islands", country != "French Polynesia", country != "Greenland", country != "International aviation", country != "International shipping", country != "Kuwaiti Oil Fires", country != "Kuwaiti Oil Fires (GCP)", country != "Middle East (GCP)", country != "Montserrat", country != "New Caledonia", country != "Niue", country != "Non-OECD (GCP)", country != "North America (GCP)", country != "North America (excl. USA)", country != "OECD (GCP)", country != "OECD (Jones et al.)", country != "Oceania (GCP)", country != "Ryukyu Islands", country != "Ryukyu Islands (GCP)", country != "Saint Helena", country != "Saint Pierre and Miquelon", country != "Sint Maarten (Dutch part)", country != "South America (GCP)", country != "Wallis and Futuna", country != "World")
+
 ```
 
----
-
----
+Our data is now more organised, but we can still take further steps to reduce the amount of data that we need to manage. For example, we've already calculated GDP per capita, which means we don't need population or gdp anymore. So we can remove that from the data.
